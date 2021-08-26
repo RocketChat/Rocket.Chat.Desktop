@@ -1,6 +1,73 @@
 {
   "version": 2,
   "projects": {
+    "electron-desktop": {
+      "root": "apps/electron-desktop",
+      "sourceRoot": "apps/electron-desktop/src",
+      "projectType": "application",
+      "prefix": "electron-desktop",
+      "targets": {
+        "build": {
+          "executor": "nx-electron:build",
+          "options": {
+            "outputPath": "dist/apps/electron-desktop",
+            "main": "apps/electron-desktop/src/main.ts",
+            "tsConfig": "apps/electron-desktop/tsconfig.app.json",
+            "assets": ["apps/electron-desktop/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/electron-desktop/src/environments/environment.ts",
+                  "with": "apps/electron-desktop/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "nx-electron:execute",
+          "options": {
+            "buildTarget": "electron-desktop:build"
+          }
+        },
+        "package": {
+          "executor": "nx-electron:package",
+          "options": {
+            "name": "electron-desktop",
+            "frontendProject": "ui-desktop",
+            "outputPath": "dist/packages",
+            "prepackageOnly": true
+          }
+        },
+        "make": {
+          "executor": "nx-electron:make",
+          "options": {
+            "name": "electron-desktop",
+            "frontendProject": "ui-desktop",
+            "outputPath": "dist/executables"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/electron-desktop/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/electron-desktop"],
+          "options": {
+            "jestConfig": "apps/electron-desktop/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "ui-desktop": {
       "root": "apps/ui-desktop",
       "sourceRoot": "apps/ui-desktop/src",
@@ -73,6 +140,85 @@
           "options": {
             "jestConfig": "apps/ui-desktop/jest.config.js",
             "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "ui-desktop-components": {
+      "root": "libs/ui-desktop-components",
+      "sourceRoot": "libs/ui-desktop-components/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/ui-desktop-components/**/*.{ts,tsx,js,jsx}"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/ui-desktop-components"],
+          "options": {
+            "jestConfig": "libs/ui-desktop-components/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "storybook": {
+          "executor": "@nrwl/storybook:storybook",
+          "options": {
+            "uiFramework": "@storybook/react",
+            "port": 4400,
+            "config": {
+              "configFolder": "libs/ui-desktop-components/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        },
+        "build-storybook": {
+          "executor": "@nrwl/storybook:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "uiFramework": "@storybook/react",
+            "outputPath": "dist/storybook/ui-desktop-components",
+            "config": {
+              "configFolder": "libs/ui-desktop-components/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        }
+      }
+    },
+    "ui-desktop-components-e2e": {
+      "root": "apps/ui-desktop-components-e2e",
+      "sourceRoot": "apps/ui-desktop-components-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/ui-desktop-components-e2e/cypress.json",
+            "devServerTarget": "ui-desktop-components:storybook"
+          },
+          "configurations": {
+            "ci": {
+              "devServerTarget": "ui-desktop-components:storybook:ci"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/ui-desktop-components-e2e/**/*.{js,ts}"]
           }
         }
       }

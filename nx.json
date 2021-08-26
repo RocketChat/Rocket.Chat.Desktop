@@ -14,7 +14,13 @@
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "e2e",
+          "build-storybook"
+        ]
       }
     }
   },
@@ -27,8 +33,18 @@
     ]
   },
   "projects": {
+    "electron-desktop": {
+      "tags": []
+    },
     "ui-desktop": {
       "tags": []
+    },
+    "ui-desktop-components": {
+      "tags": []
+    },
+    "ui-desktop-components-e2e": {
+      "tags": [],
+      "implicitDependencies": ["ui-desktop-components"]
     },
     "ui-desktop-e2e": {
       "tags": [],
