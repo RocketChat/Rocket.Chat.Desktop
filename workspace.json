@@ -1,0 +1,127 @@
+{
+  "version": 2,
+  "projects": {
+    "ui-desktop": {
+      "root": "apps/ui-desktop",
+      "sourceRoot": "apps/ui-desktop/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/web:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/ui-desktop",
+            "index": "apps/ui-desktop/src/index.html",
+            "main": "apps/ui-desktop/src/main.tsx",
+            "polyfills": "apps/ui-desktop/src/polyfills.ts",
+            "tsConfig": "apps/ui-desktop/tsconfig.app.json",
+            "assets": [
+              "apps/ui-desktop/src/favicon.ico",
+              "apps/ui-desktop/src/assets"
+            ],
+            "styles": [],
+            "scripts": [],
+            "webpackConfig": "@nrwl/react/plugins/webpack"
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/ui-desktop/src/environments/environment.ts",
+                  "with": "apps/ui-desktop/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/web:dev-server",
+          "options": {
+            "buildTarget": "ui-desktop:build",
+            "hmr": true
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "ui-desktop:build:production",
+              "hmr": false
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/ui-desktop/**/*.{ts,tsx,js,jsx}"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/ui-desktop"],
+          "options": {
+            "jestConfig": "apps/ui-desktop/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "ui-desktop-e2e": {
+      "root": "apps/ui-desktop-e2e",
+      "sourceRoot": "apps/ui-desktop-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/ui-desktop-e2e/cypress.json",
+            "devServerTarget": "ui-desktop:serve",
+            "tsConfig": "apps/ui-desktop-e2e/tsconfig.json"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "ui-desktop:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/ui-desktop-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/react"
+  },
+  "generators": {
+    "@nrwl/react": {
+      "application": {
+        "style": "@emotion/styled",
+        "linter": "eslint",
+        "babel": true
+      },
+      "component": {
+        "style": "@emotion/styled"
+      },
+      "library": {
+        "style": "@emotion/styled",
+        "linter": "eslint"
+      }
+    }
+  },
+  "defaultProject": "ui-desktop"
+}
