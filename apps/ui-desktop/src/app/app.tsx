@@ -1,8 +1,10 @@
+import { HashRouter, Route, Switch, useHistory, Link } from "react-router-dom";
 import { Sidebar, SidebarButton, SidebarGroup } from '@rocket.chat.desktop/ui-desktop-components';
 import { Box } from '@rocket.chat/fuselage';
 import { FC } from 'react';
 
 import { IpcStateRenderer } from '@rocket.chat.desktop/ipc-state';
+import { forwardRef } from "react";
 
 const state = new IpcStateRenderer<{
   servers: unknown[];
@@ -32,24 +34,47 @@ const SafeZone: FC = process.platform === 'darwin' ?
   </> :
     // eslint-disable-next-line react/jsx-no-useless-fragment
     ({ children }) => <>{children}</>;
+
+
+const SidebarLink = forwardRef((props, ref) => (
+  <SidebarButton ref={ref} {...props} />
+))
 export function App() {
   return (
+    <HashRouter>
     <SafeDragZone>
       <Sidebar isVisible>
         <SidebarGroup>
           { process.platform === 'darwin' && <Box h='x16' width='full' /> }
-          <SidebarButton icon='plus'/>
-          <SidebarButton icon='plus'/>
-          <SidebarButton icon='plus'/>
+          <Link component={SidebarLink} { ...{ icon: 'plus' } as any } to='/add'/>
         </SidebarGroup>
         <SidebarGroup>
-          <SidebarButton icon='cog'/>
-          <SidebarButton icon='download'/>
+          <Link component={SidebarLink} { ...{ icon:'cog'} as any} to='/settings' />
+          <Link component={SidebarLink} { ...{ icon:'download'} as any} to='/downloads'/>
         </SidebarGroup>
       </Sidebar>
       <Box is='webview' flexGrow={1} src='https://open.rocket.chat' elevation={"1"} />
+        <Switch>
+          <Route exact path="/" component={Home}/>
+          <Route exact path="/settings" component={Settings}/>
+          <Route exact path="/downloads" component={Downloads}/>
+        </Switch>
     </SafeDragZone>
+    </HashRouter>
   );
+}
+
+
+function Home() {
+  return <h2>Home</h2>;
+}
+
+function Settings() {
+  return <h2>Settings</h2>;
+}
+
+function Downloads() {
+  return <h2>Downloads</h2>;
 }
 
 export default App;
