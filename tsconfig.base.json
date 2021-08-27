@@ -13,8 +13,13 @@
     "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
+    "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
+      "@rocket.chat.desktop/electron-store": [
+        "libs/electron-store/src/index.ts"
+      ],
+      "@rocket.chat.desktop/ipc-state": ["libs/ipc-state/src/index.ts"],
       "@rocket.chat.desktop/ui-desktop-components": [
         "libs/ui-desktop-components/src/index.ts"
       ]

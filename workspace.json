@@ -68,6 +68,48 @@
         }
       }
     },
+    "electron-store": {
+      "root": "libs/electron-store",
+      "sourceRoot": "libs/electron-store/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/electron-store/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/electron-store"],
+          "options": {
+            "jestConfig": "libs/electron-store/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "ipc-state": {
+      "root": "libs/ipc-state",
+      "sourceRoot": "libs/ipc-state/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/ipc-state/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/ipc-state"],
+          "options": {
+            "jestConfig": "libs/ipc-state/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "ui-desktop": {
       "root": "apps/ui-desktop",
       "sourceRoot": "apps/ui-desktop/src",
@@ -88,7 +130,7 @@
             ],
             "styles": [],
             "scripts": [],
-            "webpackConfig": "@nrwl/react/plugins/webpack"
+            "webpackConfig": "tools/webpack-react-electron.config.js"
           },
           "configurations": {
             "production": {

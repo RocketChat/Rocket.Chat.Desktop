@@ -28,7 +28,6 @@ export default class Main {
 
 // handle setup events as quickly as possible
 Main.initialize();
-
 // bootstrap app
 Main.bootstrapApp();
 Main.bootstrapAppEvents();

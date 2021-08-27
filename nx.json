@@ -36,6 +36,12 @@
     "electron-desktop": {
       "tags": []
     },
+    "electron-store": {
+      "tags": []
+    },
+    "ipc-state": {
+      "tags": []
+    },
     "ui-desktop": {
       "tags": []
     },

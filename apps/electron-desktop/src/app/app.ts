@@ -4,6 +4,16 @@ import { environment } from '../environments/environment';
 import { join } from 'path';
 import { format } from 'url';
 
+import { IpcStateMain } from '@rocket.chat.desktop/ipc-state';
+
+const state = new IpcStateMain<{
+  servers: [string, boolean, boolean];
+}>('servers', new Map(Object.entries({'servers': [] })) as any);
+
+setInterval(() => {
+  state.set('servers', [JSON.stringify(process.env), App.isDevelopmentMode(), process.env.WEBPACK_DEV_SERVER === 'true']);
+}, 1000);
+
 export default class App {
   // Keep a global reference of the window object, if you don't, the window will
   // be closed automatically when the JavaScript object is garbage collected.
@@ -15,8 +25,8 @@ export default class App {
     const isEnvironmentSet: boolean = 'ELECTRON_IS_DEV' in process.env;
     const getFromEnvironment: boolean =
       parseInt(process.env.ELECTRON_IS_DEV, 10) === 1;
-
-    return isEnvironmentSet ? getFromEnvironment : !environment.production;
+    return process.env.WEBPACK_DEV_SERVER === 'true' || process.env.NODE_ENV === 'development' ||
+    process.env.DEBUG_PROD === 'true' || (isEnvironmentSet ? getFromEnvironment : !environment.production);
   }
 
   private static onWindowAllClosed() {
@@ -46,6 +56,24 @@ export default class App {
     // Some APIs can only be used after this event occurs.
     App.initMainWindow();
     App.loadMainWindow();
+    if (App.isDevelopmentMode()) {
+
+      App.mainWindow.webContents.openDevTools();
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const installer = require('electron-devtools-installer');
+      const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
+      const extensions = ['REACT_DEVELOPER_TOOLS'];
+
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      require('electron-debug')();
+
+      return installer
+        .default(
+          extensions.map((name) => installer[name]),
+          forceDownload
+        )
+        .catch(console.log);
+    }
   }
 
   private static onActivate() {
@@ -71,7 +99,6 @@ export default class App {
         webviewTag: true,
         contextIsolation: false,
         nodeIntegration: true,
-        backgroundThrottling: false,
         preload: join(__dirname, 'preload.js'),
       },
     });

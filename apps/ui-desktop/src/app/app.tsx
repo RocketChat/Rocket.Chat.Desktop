@@ -2,6 +2,17 @@ import { Sidebar, SidebarButton, SidebarGroup } from '@rocket.chat.desktop/ui-de
 import { Box } from '@rocket.chat/fuselage';
 import { FC } from 'react';
 
+import { IpcStateRenderer } from '@rocket.chat.desktop/ipc-state';
+
+const state = new IpcStateRenderer<{
+  servers: unknown[];
+}>('servers', new Map(Object.entries({'servers': [] })) as any);
+
+state.on('change', (state: any) => {
+  console.log(state);
+});
+
+
 const style = {
   WebkitAppRegion: 'drag',
 } as React.CSSProperties;
