@@ -3,6 +3,14 @@ import { rendererAppName, rendererAppPort } from './constants';
 import { environment } from '../environments/environment';
 import { join } from 'path';
 import { format } from 'url';
+import { ElectronWindowState } from '@rocket.chat.desktop/electron-window-state';
+
+// const WindowStateManager = require('electron-window-state-manager');
+
+// const mainWindowState = new WindowStateManager('mainWindow', {
+//   defaultWidth: 1024,
+//   defaultHeight: 768
+// });
 
 import { IpcStateMain } from '@rocket.chat.desktop/ipc-state';
 
@@ -10,9 +18,9 @@ const state = new IpcStateMain<{
   servers: [string, boolean, boolean];
 }>('servers', new Map(Object.entries({'servers': [] })) as any);
 
-setInterval(() => {
-  state.set('servers', [JSON.stringify(process.env), App.isDevelopmentMode(), process.env.WEBPACK_DEV_SERVER === 'true']);
-}, 1000);
+// setInterval(() => {
+//   state.set('servers', [JSON.stringify(process.env), App.isDevelopmentMode(), process.env.WEBPACK_DEV_SERVER === 'true']);
+// }, 1000);
 
 export default class App {
   // Keep a global reference of the window object, if you don't, the window will
@@ -89,10 +97,19 @@ export default class App {
     const width = Math.min(1280, workAreaSize.width || 1280);
     const height = Math.min(720, workAreaSize.height || 720);
 
+    const windowState = new ElectronWindowState({
+      width,
+      height,
+    });
+
     // Create the browser window.
     App.mainWindow = new BrowserWindow({
-      width: width,
-      height: height,
+      width: windowState.width,
+      height: windowState.height,
+
+      x: windowState.x,
+      y: windowState.y,
+
       show: false,
       titleBarStyle: 'hidden',
       webPreferences: {
@@ -102,8 +119,12 @@ export default class App {
         preload: join(__dirname, 'preload.js'),
       },
     });
+
+    if (windowState.maximized) {
+      App.mainWindow.maximize();
+    }
+
     App.mainWindow.setMenu(null);
-    App.mainWindow.center();
 
     // if main window is ready to show, close the splash window and show the main window
     App.mainWindow.once('ready-to-show', () => {
@@ -116,13 +137,24 @@ export default class App {
     //     App.onRedirect(event, url);
     // });
 
+
     // Emitted when the window is closed.
+
+
+    App.mainWindow.on('close', () => {
+
+      // Dereference the window object, usually you would store windows
+      // in an array if your app supports multi windows, this is the time
+      // when you should delete the corresponding element.
+      windowState.save(App.mainWindow);
+    });
     App.mainWindow.on('closed', () => {
       // Dereference the window object, usually you would store windows
       // in an array if your app supports multi windows, this is the time
       // when you should delete the corresponding element.
       App.mainWindow = null;
     });
+
   }
 
   private static loadMainWindow() {

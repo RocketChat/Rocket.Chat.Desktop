@@ -42,39 +42,41 @@ const SidebarLink = forwardRef((props, ref) => (
 export function App() {
   return (
     <HashRouter>
-    <SafeDragZone>
-      <Sidebar isVisible>
-        <SidebarGroup>
-          { process.platform === 'darwin' && <Box h='x16' width='full' /> }
-          <Link component={SidebarLink} { ...{ icon: 'plus' } as any } to='/add'/>
-        </SidebarGroup>
-        <SidebarGroup>
-          <Link component={SidebarLink} { ...{ icon:'cog'} as any} to='/settings' />
-          <Link component={SidebarLink} { ...{ icon:'download'} as any} to='/downloads'/>
-        </SidebarGroup>
-      </Sidebar>
-      <Box is='webview' flexGrow={1} src='https://open.rocket.chat' elevation={"1"} />
-        <Switch>
-          <Route exact path="/" component={Home}/>
-          <Route exact path="/settings" component={Settings}/>
-          <Route exact path="/downloads" component={Downloads}/>
-        </Switch>
-    </SafeDragZone>
+      <SafeDragZone>
+        <Sidebar isVisible>
+          <SidebarGroup>
+            { process.platform === 'darwin' && <Box h='x16' width='full' /> }
+            <Link component={SidebarLink} { ...{ icon: 'plus' } as any } to='/add'/>
+          </SidebarGroup>
+          <SidebarGroup>
+            <Link component={SidebarLink} { ...{ icon:'cog'} as any} to='/settings' />
+            <Link component={SidebarLink} { ...{ icon:'download'} as any} to='/downloads'/>
+          </SidebarGroup>
+        </Sidebar>
+        <Box display='flex' flexGrow={1} elevation={"1"}>
+          <Box is='webview' flexGrow={1}  src='https://open.rocket.chat' />
+          <Switch>
+            <Route exact path="/" component={Home}/>
+            <Route exact path="/settings" component={Settings}/>
+            <Route exact path="/downloads" component={Downloads}/>
+          </Switch>
+        </Box>
+      </SafeDragZone>
     </HashRouter>
   );
 }
 
 
 function Home() {
-  return <h2>Home</h2>;
+  return <Box position='fixed' width='100%' height='100%'>Home</Box>;
 }
 
 function Settings() {
-  return <h2>Settings</h2>;
+  return <Box position='fixed' width='100%' height='100%'>Settings</Box>;
 }
 
 function Downloads() {
-  return <h2>Downloads</h2>;
+  return <Box position='fixed' width='100%' height='100%'>Downloads</Box>;
 }
 
 export default App;

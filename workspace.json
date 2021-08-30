@@ -89,6 +89,27 @@
         }
       }
     },
+    "electron-window-state": {
+      "root": "libs/electron-window-state",
+      "sourceRoot": "libs/electron-window-state/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/electron-window-state/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/electron-window-state"],
+          "options": {
+            "jestConfig": "libs/electron-window-state/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "ipc-state": {
       "root": "libs/ipc-state",
       "sourceRoot": "libs/ipc-state/src",

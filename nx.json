@@ -39,6 +39,9 @@
     "electron-store": {
       "tags": []
     },
+    "electron-window-state": {
+      "tags": []
+    },
     "ipc-state": {
       "tags": []
     },
